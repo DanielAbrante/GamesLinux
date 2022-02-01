@@ -11,14 +11,14 @@ about() {
 	echo " \                Created by DanielAbrante               / "
 	echo " ========================================================= "
 	echo ""
-	echo " [!] - A pasta GamesLinux será criada na sua HOME para salvar os games "
+	echo " [!] - The GamesLinux folder will be create in your HOME to save games "
 	echo ""
 	echo "           -=+ Copyright (C) 2022 DanielAbrante +=-        "
 	echo ""
 }
 
 get_game_from_user() {
-	read -p "Digite o nome do Jogo: " GAME
+	read -p "Type a game: " GAME
 }
 
 about
