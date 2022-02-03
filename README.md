@@ -7,6 +7,11 @@
 
 </br>
 
+## Installation
+- Download the script from release page
+
+</br>
+
 ## **TODO**
 - [ ] - Replace method about to search games 
 - [ ] - Add a method to download games when Google Drive emit error message about many access in the url
