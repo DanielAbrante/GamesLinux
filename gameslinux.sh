@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # This is a script to download games from youtube channel GameLinux
-# Will be create a directory in your user home called, GameLinux, there will be puted games then you have choosed
 
 about() {
 	echo ""
@@ -11,34 +10,31 @@ about() {
 	echo " \                Created by DanielAbrante               / "
 	echo " ========================================================= "
 	echo ""
-	echo " [!] - The GamesLinux folder will be create in your HOME to save games "
+	echo " [!] - The GamesLinux folder will be create in your $HOME to save games "
 	echo ""
 	echo "           -=+ Copyright (C) 2022 DanielAbrante +=-        "
 	echo ""
 }
 
-get_game_from_user() {
-	read -p "Type a game: " GAME
-}
-
 about
 
-URL_YOUTUBE_CHANNEL="https://yewtu.be/channel/UCrE7Vzc6G971XnrDyo53mGA"
-URL_INVIDIOUS_INSTANCE="https://yewtu.be"
+printf 'Type a game: '
+read -r GAME
+echo ""
 
-get_game_from_user
+URL_INVIDIOUS_INSTANCE='https://yewtu.be'
 
-
-HTML_VIDEO=`curl $URL_YOUTUBE_CHANNEL | grep -B 11 -i $GAME`
-SUFFIX_URL_VIDEO=`less $HTML_VIDEO | grep -oi '/watch?v=[a-zA-Z0-9]*' `
-WHOLE_URL_VIDEO="$URL_INVIDIOUS_INSTANCE$SUFFIX_URL_VIDEO"
-URL_GOOGLE_DRIVE_GAME=`curl $WHOLE_URL_VIDEO | grep -m 1 -i "drive"`
-FILEID=`less $URL_GOOGLE_DRIVE_GAME | grep -io '1[a-zA-Z0-9- _]*' `
+HTML_GAME_TITLE=`curl https://yewtu.be/channel/UCrE7Vzc6G971XnrDyo53mGA | grep -B 11 -i $GAME`
+URL_GAME_TITLE=`echo $HTML_GAME_TITLE | grep -oi '/watch?v=[a-zA-Z0-9]*'`
+HTML_VIDEO=$URL_INVIDIOUS_INSTANCE$URL_GAME_TITLE
+FILEID=`curl $HTML_VIDEO | grep -m 1 -i 'drive' | grep -io '1[_a-zA-Z0-9-]*'`
 
 cd $HOME
-mkdir -p GameLinux
-cd GameLinux
+mkdir -p GamesLinux
+cd GamesLinux
 
-wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate "https://docs.google.com/uc?export=download&id=$FILEID" -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=$FILEID" -O $GAME.AppImage && rm -rf /tmp/cookies.txt
+curl -c ./cookie -s -L "https://drive.google.com/uc?export=download&id=${FILEID}" > /dev/null
+curl -Lb ./cookie "https://drive.google.com/uc?export=download&confirm=`awk '/download/ {print $NF}' ./cookie`&id=${FILEID}" -o ${GAME}.AppImage
 
-chmod +x ./$GAME.AppImage
+chmod +x $GAME.AppImage
+rm -f cookie
