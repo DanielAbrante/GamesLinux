@@ -9,6 +9,8 @@
 
 ## Installation
 - Download the script from release page
+- Or just, [click here to instant download](https://github.com/DanielAbrante/GamesLinux/releases/download/v0.2.0-alpha/gameslinux.sh)
+
 
 </br>
 
