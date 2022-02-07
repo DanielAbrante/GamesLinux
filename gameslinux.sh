@@ -96,7 +96,7 @@ mkdir -p GamesLinux
 cd GamesLinux
 
 curl -c ./cookie -s -L "https://drive.google.com/uc?export=download&id=${FILEID}" > /dev/null
-curl -Lb ./cookie "https://drive.google.com/uc?export=download&confirm=`awk '/download/ {print $NF}' ./cookie`&id=${FILEID}" -o ${FILENAME}.AppImage
+curl -Lb ./cookie "https://drive.google.com/uc?export=download&confirm=`awk '/download/ {print $NF}' ./cookie`&id=${FILEID}" -o "${FILENAME}.AppImage" --progress-barNF}' ./cookie`&id=${FILEID}" -o ${FILENAME}.AppImage
 
 chmod +x $FILENAME.AppImage
 rm -f cookie
