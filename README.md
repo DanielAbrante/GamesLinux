@@ -21,9 +21,9 @@
 
 ## Usage 
 
-- Go to directory where downloaded the GamesLinux.sh
-- Open the terminal and give execute permission: `chmod +x ./GamesLinux` 
-- To run the script type: `./GamesLinux`
+- Go to directory where downloaded the gameslinux.sh
+- Open the terminal and give execute permission: `chmod +x ./gameslinux.sh` 
+- To run the script type: `./gameslinux.sh`
 
 ## Todo
 
