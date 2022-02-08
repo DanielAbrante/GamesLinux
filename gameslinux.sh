@@ -98,6 +98,7 @@ FILEID=`curl -s $HTML_VIDEO | grep -m 1 -i 'drive' | grep -io '1[_a-zA-Z0-9-]*'`
 
 GAMES_FOLDER=$HOME/GamesLinux
 mkdir -p $GAMES_FOLDER
+cd $GAMES_FOLDER
 
 curl -s -c ./cookie -L "https://drive.google.com/uc?export=download&id=${FILEID}" > /dev/null
 echo -e "\nDOWNLOADING..."
