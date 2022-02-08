@@ -1,20 +1,36 @@
 # GamesLinux
 
-<img src="gameslinux-readme.png"></img>
-
-## [ ! ] - Important
-**This is a initial basic script, then, many bugs will be encountered**
-
+## Screenshots
+<img alt="Menu script image" src="img/menu.png" width=30%> 
 </br>
-
-## Installation
-- Download the script from release page
-- Or just, [click here to instant download](https://github.com/DanielAbrante/GamesLinux/releases/download/v0.2.0-alpha/gameslinux.sh)
-
-
+<img alt="All games list  image" src="img/all-games-list.png" width=30%> 
 </br>
+<img alt="Choosed game info image" src="img/choosed-game-info.png" width=30%>
 
-## **TODO**
-- [ ] - Replace method about to search games 
-- [ ] - Add a method to download games when Google Drive emit error message about many access in the url
-- [ ] - Check dependencies to .deb files in your distro
+## Features
+* Download games to Linux from GameLinux channel
+* AppImage and .deb formats
+* Search for all games available
+* Search for specific games available
+* Privacy instance to search games
+* Privacy download method over manual method
+
+## Official Download
+
+[GitHub Releases](https://github.com/DanielAbrante/GamesLinux/releases/download/v0.3.0/gameslinux.sh)
+
+## Usage 
+
+- Go to directory where downloaded the GamesLinux.sh
+- Open the terminal and give execute permission: `chmod +x ./GamesLinux` 
+- To run the script type: `./GamesLinux`
+
+## Todo
+
+- [x] Replace method about to search games 
+
+- [x] Add a method to download games when Google Drive emit error message about many access in the url
+
+- [ ] Check dependencies to .deb files in your distro
+
+- [ ] Create a launch to desktop
