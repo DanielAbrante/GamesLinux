@@ -1,102 +1,107 @@
-#!/bin/bash
-
-# This is a script to download games from youtube channel GameLinux
+#!/bin/sh
 
 about() {
+	echo " =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= "
 	echo ""
-	echo " ========================================================= "
-	echo " \                   GamesLinux Script                   / "
-	echo " \                 Download Games to Linux               / "
-	echo " \                Created by DanielAbrante               / "
-	echo " ========================================================= "
+	echo " |                       GamesLinux Script                           | "
+	echo " |                    Download Games to Linux                        | "
+	echo " |     The games will be in the user directory inside GamesLinux     | "
 	echo ""
-	echo " [!] - The GamesLinux folder will be create in your $HOME to save games "
+	echo "              -=+ Copyright (C) 2022 DanielAbrante +=-                 "
 	echo ""
-	echo "           -=+ Copyright (C) 2022 DanielAbrante +=-        "
+	echo " =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= "
+}
+
+menu() {
+	echo ""
+	echo " [a] - All games list"
+	echo " [s] - Search game"
+	echo " [e] - Exit"
+	printf '\n>> '
+	read -r MENU_OPTION
+}
+
+loop_menu() {
+	while [ "$MENU_OPTION" != "e" ]
+	do
+		about
+		menu
+		case $MENU_OPTION in 
+		"a")
+			get_all_list_games
+			get_gameid_from_user
+			get_filename_from_user
+			break
+			;;
+		"s")
+			get_searched_game
+			get_all_list_games $SEARCHED_GAME
+			get_gameid_from_user
+			get_filename_from_user
+			break
+			;;
+		"e")
+			exit 1
+			;;
+		*)
+			zenity --error --text='Invalid Option!' --title='Error' 
+			clear
+			;;
+	esac 
+	done
+}
+
+get_all_list_games() {
+	echo ""
+	echo -e "\t\t\t\t _-=+ ALL AVAILABLE GAMES +=-_"
+	echo ""
+	
+	if [ "$1" = "" ] 
+	then 
+		ALL_GAMES_TITLES=`curl -s "https://yewtu.be/channel/UCrE7Vzc6G971XnrDyo53mGA" | grep -i '<p dir="auto">' | sed 's/<p dir="auto">//g'`
+		NUMBER_LINES=`echo $ALL_GAMES_TITLES | sed 's/<\/p> /&\n/g' | wc -l`
+	else 
+		ALL_GAMES_TITLES=`curl -s "https://yewtu.be/channel/UCrE7Vzc6G971XnrDyo53mGA" | grep -i "$SEARCHED_GAME" | sed 's/<p dir="auto">//g'`
+		NUMBER_LINES=`echo $ALL_GAMES_TITLES | sed 's/<\/p> /&\n/g' | wc -l`
+	fi
+	
+	for ((i = 1; i <= $NUMBER_LINES; i++))
+	do
+		TITLES[$i]=`echo $ALL_GAMES_TITLES | sed 's/<\/p> /&\n/g' | sed 's/<\/p>//g' | sed ""$i'!d'""`
+		echo "[ID=$i] -" ${TITLES[$i]}
+	done
+}
+
+get_searched_game() {
+	printf '\nType a game: '
+	read -r SEARCHED_GAME
 	echo ""
 }
 
-get_games_list() {
-	NUMBER_LINES=`wc -l titles.txt | grep -o "[0-9]*"`
-
-	for ((i = 1; i <= $NUMBER_LINES; i++))
-	do
-		TITLES[$i]=`sed ""$i'!d'"" ./titles.txt`
-	done
-
-	for ((i = 1; i <= $NUMBER_LINES; i++))
-	do
-		echo "ID=$i -" ${TITLES[$i]}
-	done
-}
-
-get_game_id() {
-	echo ""
-	echo '===================================='
-	echo ' Choose the ID to download the game '
-	echo ""
-	printf 'ID: '
+get_gameid_from_user() {
+	printf '\nChoose a ID to download the game: '
 	read -r GAME_ID
 }
 
-APPLICATION="1"
+get_filename_from_user() {
+	printf 'Choose the filename, (No need extension!): '
+	read -r FILENAME
+}
 
-about
-
-while [ "$APPLICATION" = "1" ]
-do
-	echo "[a] - All games list"
-	echo "[s] - Search game"
-	echo "[e] - Exit"
-	printf '>> '
-	read -r OPTION_MENU
-	
-	if [ "$OPTION_MENU" = "a" ] 
-	then
-		curl https://yewtu.be/channel/UCrE7Vzc6G971XnrDyo53mGA | grep -A 1 -io '<p dir="auto">[- a-zA-Z0-9.á-źçã,!]*' | sed 's/<p dir="auto">//g' | sed 's/--//g' | grep -v '^[[:space:]]*$' > titles.txt
-		echo ""
-		get_games_list
-		get_game_id
-		APPLICATION="0"
-	elif [ "$OPTION_MENU" = "s" ] 
-	then
-		echo ""
-		printf 'Type a name: '
-		read -r GAME
-		echo ""
-		echo ""
-		curl https://yewtu.be/channel/UCrE7Vzc6G971XnrDyo53mGA | grep -A 1 -io "$GAME[- a-zA-Z0-9.á-źçã,]*" | sed 's/<p dir="auto">//g' | sed 's/--//g' | grep -v '^[[:space:]]*$' > titles.txt
-		get_games_list
-		get_game_id
-		APPLICATION="0"
-	elif [ "$OPTION_MENU" = "e" ]
-	then
-		exit 1
-	else 
-		`zenity --error --text='Invalid Option!' --title='Erro'` 
-		clear
-	fi
-done
-
-printf 'Choose the filename, (No need extension!): '
-read -r FILENAME
+loop_menu
 
 URL_INVIDIOUS_INSTANCE='https://yewtu.be'
+GAME_TITLE=`echo ${TITLES[GAME_ID]}`
+URL_VIDEO=`curl -s https://yewtu.be/channel/UCrE7Vzc6G971XnrDyo53mGA | grep -B 11 -i "${GAME_TITLE}" | grep -io '/watch?v=[a-zA-Z0-9]*'`
+HTML_VIDEO=$URL_INVIDIOUS_INSTANCE$URL_VIDEO
+FILEID=`curl -s $HTML_VIDEO | grep -m 1 -i 'drive' | grep -io '1[_a-zA-Z0-9-]*'`
 
-HTML_GAME_TITLE=`curl https://yewtu.be/channel/UCrE7Vzc6G971XnrDyo53mGA | grep -B 11 -i "${TITLES[GAME_ID]}"`
+GAMES_FOLDER=$HOME/GamesLinux
+mkdir -p $GAMES_FOLDER
 
-rm -f ./titles.txt
+curl -s -c ./cookie -L "https://drive.google.com/uc?export=download&id=${FILEID}" > /dev/null
+echo -e "\nDOWNLOADING..."
+curl -Lb ./cookie "https://drive.google.com/uc?export=download&confirm=`awk '/download/ {print $NF}' ./cookie`&id=${FILEID}" -C - -o "$GAMES_FOLDER/${FILENAME}.AppImage" --progress-bar
 
-URL_GAME_TITLE=`echo $HTML_GAME_TITLE | grep -oi '/watch?v=[a-zA-Z0-9]*'`
-HTML_VIDEO=$URL_INVIDIOUS_INSTANCE$URL_GAME_TITLE
-FILEID=`curl $HTML_VIDEO | grep -m 1 -i 'drive' | grep -io '1[_a-zA-Z0-9-]*'`
-
-cd $HOME
-mkdir -p GamesLinux
-cd GamesLinux
-
-curl -c ./cookie -s -L "https://drive.google.com/uc?export=download&id=${FILEID}" > /dev/null
-curl -Lb ./cookie "https://drive.google.com/uc?export=download&confirm=`awk '/download/ {print $NF}' ./cookie`&id=${FILEID}" -o "${FILENAME}.AppImage" --progress-barNF}' ./cookie`&id=${FILEID}" -o ${FILENAME}.AppImage
-
-chmod +x $FILENAME.AppImage
-rm -f cookie
+rm -f $GAMES_FOLDER/cookie
+chmod +x $GAMES_FOLDER/$FILENAME.AppImage
