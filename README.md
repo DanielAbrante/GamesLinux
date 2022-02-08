@@ -1,11 +1,11 @@
 # GamesLinux
 
 ## Screenshots
-<img alt="Menu script image" src="img/menu.png" width=60%> 
+<img alt="Menu script image" src="img/menu.png" width=70%> 
 </br>
-<img alt="All games list  image" src="img/all-games-list.png" width=60%> 
+<img alt="All games list image" src="img/all-games-list.png" width=70%> 
 </br>
-<img alt="Choosed game info image" src="img/choosed-game-info.png" width=60%>
+<img alt="Choosed game info image" src="img/choosed-game-info.png" width=70%>
 
 ## Features
 * Download games to Linux from GameLinux channel
