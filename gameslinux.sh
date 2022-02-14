@@ -52,9 +52,7 @@ loop_menu() {
 }
 
 get_all_list_games() {
-	echo ""
-	echo -e "\t\t\t\t _-=+ ALL AVAILABLE GAMES +=-_"
-	echo ""
+	echo -e "\n\t\t\t\t _-=+ ALL AVAILABLE GAMES +=-_\n"
 	
 	if [ "$1" = "" ] 
 	then 
